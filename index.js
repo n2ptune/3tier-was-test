@@ -4,6 +4,8 @@ const app = express()
 const cors = require("cors")
 
 app.use(cors())
+app.use(express.urlencoded())
+app.use(express.json())
 
 const dbConfig = {
   database: process.env.DB_DATABASE,
@@ -26,13 +28,18 @@ apiRouter.get("/list", async (req, res) => {
   res.send(result)
 })
 
-apiRouter.post("/p", (req, res) => {
-  reg.push(res.body)
+apiRouter.post("/p", async (req, res) => {
+  const query = `INSERT INTO tb_message VALUES (?);`
+  const connection = await dbPool.getConnection()
+  await connection.query(query)
   res.status(201).end()
 })
 
-apiRouter.get("/p", (req, res) => {
-  res.send(reg)
+apiRouter.get("/p", async (req, res) => {
+  const query = `SELECT * FROM tb_message;`
+  const connection = await dbPool.getConnection()
+  const [result] = await connection.query(query)
+  res.status(200).send(result).end()
 })
 
 app.use("/api", apiRouter)
