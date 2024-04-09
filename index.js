@@ -24,6 +24,7 @@ const apiRouter = express.Router()
 apiRouter.get("/list", async (req, res) => {
   const connection = await dbPool.getConnection()
   const [result] = await connection.query("SELECT NOW();")
+  connection.release()
 
   res.send(result)
 })
@@ -32,6 +33,7 @@ apiRouter.post("/p", async (req, res) => {
   const query = `INSERT INTO tb_message (text) VALUES (?);`
   const connection = await dbPool.getConnection()
   await connection.query(query, [req.body.text])
+  connection.release()
   res.status(201).end()
 })
 
@@ -39,6 +41,7 @@ apiRouter.get("/p", async (req, res) => {
   const query = `SELECT * FROM tb_message;`
   const connection = await dbPool.getConnection()
   const [result] = await connection.query(query)
+  connection.release()
   res.status(200).send(result).end()
 })
 
