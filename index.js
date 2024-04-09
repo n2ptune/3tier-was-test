@@ -29,6 +29,22 @@ apiRouter.get("/list", async (req, res) => {
   res.send(result)
 })
 
+apiRouter.post('/clear', async (req, res) => {
+  const query = `UPDATE tb_message SET deleted = false;`
+  const connection = await dbPool.getConnection()
+
+  await connection.beginTransaction()
+
+  await connection.query('SET SQL_SAFE_UPDATES = 0;')
+  await connection.query(query, [req.body.text])
+  await connection.query('SET SQL_SAFE_UPDATES = 1;')
+
+  await connection.commit()
+
+  connection.release()
+  res.status(200).end()
+})
+
 apiRouter.post("/p", async (req, res) => {
   const query = `INSERT INTO tb_message (text) VALUES (?);`
   const connection = await dbPool.getConnection()
@@ -38,7 +54,7 @@ apiRouter.post("/p", async (req, res) => {
 })
 
 apiRouter.get("/p", async (req, res) => {
-  const query = `SELECT * FROM tb_message;`
+  const query = `SELECT * FROM tb_message WHERE deleted = false;`
   const connection = await dbPool.getConnection()
   const [result] = await connection.query(query)
   connection.release()
