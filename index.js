@@ -29,7 +29,7 @@ apiRouter.get("/list", async (req, res) => {
 })
 
 apiRouter.post("/p", async (req, res) => {
-  const query = `INSERT INTO tb_message VALUES (?);`
+  const query = `INSERT INTO tb_message (text) VALUES (?);`
   const connection = await dbPool.getConnection()
   await connection.query(query, [req.body.text])
   res.status(201).end()
