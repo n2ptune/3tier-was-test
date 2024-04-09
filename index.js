@@ -9,11 +9,12 @@ const dbConfig = {
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
   password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER
 }
 console.log(dbConfig)
 
-const dbPool = mysql.createPool(dbConfig)
+const dbPool = mysql.createPool({ ...dbConfig })
 const reg = []
 
 const apiRouter = express.Router()
