@@ -30,7 +30,7 @@ apiRouter.get("/list", async (req, res) => {
 })
 
 apiRouter.post('/clear', async (req, res) => {
-  const query = `UPDATE tb_message SET deleted = false;`
+  const query = `UPDATE tb_message SET deleted = true;`
   const connection = await dbPool.getConnection()
 
   await connection.beginTransaction()
