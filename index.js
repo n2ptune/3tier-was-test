@@ -4,7 +4,7 @@ const app = express()
 const cors = require("cors")
 
 app.use(cors())
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 const dbConfig = {
@@ -31,7 +31,7 @@ apiRouter.get("/list", async (req, res) => {
 apiRouter.post("/p", async (req, res) => {
   const query = `INSERT INTO tb_message VALUES (?);`
   const connection = await dbPool.getConnection()
-  await connection.query(query, [res.body.text])
+  await connection.query(query, [req.body.text])
   res.status(201).end()
 })
 
